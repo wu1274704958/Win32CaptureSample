@@ -175,7 +175,7 @@ winrt::IAsyncOperation<winrt::StorageFile> App::TakeSnapshotAsync()
 
         // Take the snapshot
         auto texture = co_await CaptureSnapshot::TakeAsync(m_device, item, pixelFormat);
-
+        
         // Encode the image
         D3D11_TEXTURE2D_DESC desc = {};
         texture->GetDesc(&desc);
