@@ -21,6 +21,7 @@ public:
 
     void StopCapture();
 
+    const std::unique_ptr<SimpleCapture>& GetCapture(){ return m_capture; }
 private:
     void StartCaptureFromItem(winrt::Windows::Graphics::Capture::GraphicsCaptureItem item);
 

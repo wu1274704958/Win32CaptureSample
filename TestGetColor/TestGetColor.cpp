@@ -21,20 +21,27 @@ int main()
 
     auto app = std::make_unique<App>();
     app->TryStartCaptureFromWindowHandle(hwnd);
-
+    app->GetCapture()->IsBorderRequired(false);
+    
+    int a = 0;
     MSG msg = {};
     while (GetMessageW(&msg, nullptr, 0, 0))
     {
         TranslateMessage(&msg);
         DispatchMessageW(&msg);
-        if (app->GetColor(0, 0) != 2)
+        if (a >= 3 && app->GetColor(0, 0) != 2)
         {
-            auto color = app->GetColor(37, 0);
+            a = 0;
+            auto color = app->GetColor(19, 0);
             auto b = (color >> 24) & 255;
             auto g = (color >> 16) & 255;
             auto r = (color >> 8) & 255;
-            break;
+            printf("r=%d g=%d b=%d\n",r,g,b);
+            auto c = getchar();
+            if (c == 'x')
+                break;
         }
+        ++a;
     }
     
     app->StopCapture();
