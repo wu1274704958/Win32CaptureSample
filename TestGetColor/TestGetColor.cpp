@@ -17,7 +17,7 @@ int main()
         return -1;
     }
     winrt::init_apartment(winrt::apartment_type::single_threaded);
-    auto controller = util::CreateDispatcherQueueControllerForCurrentThread();
+    //auto controller = util::CreateDispatcherQueueControllerForCurrentThread();
 
     auto app = std::make_unique<App>();
     app->TryStartCaptureFromWindowHandle(hwnd);
@@ -46,7 +46,7 @@ int main()
     
     app->StopCapture();
 
-    return util::ShutdownDispatcherQueueControllerAndWait(controller, static_cast<int>(msg.wParam));
+    return 0;//util::ShutdownDispatcherQueueControllerAndWait(controller, static_cast<int>(msg.wParam));
 }
 
 
