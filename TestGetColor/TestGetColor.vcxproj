@@ -129,18 +129,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
+    <ClCompile Include="CaptureSnapshot.cpp" />
     <ClCompile Include="pch.h" />
-    <ClCompile Include="SimpleCapture.cpp" />
     <ClCompile Include="TestGetColor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h" />
+    <ClInclude Include="CaptureSnapshot.h" />
     <ClInclude Include="dispatcherqueue.desktop.interop.h" />
-    <ClInclude Include="SimpleCapture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
