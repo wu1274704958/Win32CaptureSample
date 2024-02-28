@@ -19,6 +19,7 @@ int Init(HWND hwnd)
     APP = std::make_unique<App>();
     APP->TryStartCaptureFromWindowHandle(hwnd);
     APP->GetCapture()->IsBorderRequired(false);
+    APP->GetCapture()->IsCursorEnabled(false);
     return 0;
 }
 
@@ -26,20 +27,8 @@ unsigned int GetColor(int x, int y)
 {
     if (APP == nullptr)
         return 3;
-    int a = 0;
-    MSG msg = {};
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-        if (a >= 3 && APP->GetColor(0, 0) != 2)
-        {
-            a = 0;
-            auto color = APP->GetColor(x, y);
-            return color;
-        }
-        ++a;
-    }
+    auto color = APP->GetColor(x, y);
+    return color;
 }
 
 void Stop()
