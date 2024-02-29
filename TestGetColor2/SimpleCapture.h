@@ -25,6 +25,7 @@ public:
     }
 
     unsigned int GetColorFromBackBuffer(int x,int y, uint32_t subresource = 0);
+    winrt::Windows::Foundation::IAsyncAction  SaveSnapshoot();
 
     void Close();
 

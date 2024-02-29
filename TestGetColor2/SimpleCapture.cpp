@@ -12,6 +12,12 @@ namespace winrt
     using namespace Windows::System;
     using namespace Windows::UI;
     using namespace Windows::UI::Composition;
+    using namespace Windows::Graphics::Imaging;
+    using namespace Windows::Storage;
+    using namespace Windows::Foundation;
+    using namespace Windows::Storage::Pickers;
+    using namespace Windows::System;
+    using namespace Windows::UI::Popups;
 }
 
 namespace util
@@ -24,6 +30,8 @@ SimpleCapture::SimpleCapture(winrt::IDirect3DDevice const& device, winrt::Graphi
     m_item = item;
     m_device = device;
     m_pixelFormat = pixelFormat;
+
+
 
     // Creating our frame pool with 'Create' instead of 'CreateFreeThreaded'
     // means that the frame pool's FrameArrived event is called on the thread
@@ -73,11 +81,50 @@ unsigned int SimpleCapture::GetColorFromBackBuffer(int x, int y, uint32_t subres
         res |= (source[target] << 24);
         res |= (source[target + 1] << 16);
         res |= (source[target + 2] << 8);
+        res |= (source[target + 3]);
         
         d3dContext->Unmap(stagingTexture.get(), 0);
         return res;
     }
     return 2;
+}
+
+
+winrt::IAsyncAction SimpleCapture::SaveSnapshoot()
+{
+   
+    if (m_lastTexture != nullptr)
+    {
+        m_textureMutex.lock();
+        auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+        winrt::com_ptr<ID3D11DeviceContext> d3dContext;
+        d3dDevice->GetImmediateContext(d3dContext.put());
+
+        //auto stagingTexture = util::PrepareStagingTexture(d3dDevice, m_lastTexture);
+
+        D3D11_TEXTURE2D_DESC desc = {};
+        m_lastTexture->GetDesc(&desc);
+
+        auto bytesPerPixel = util::GetBytesPerPixel(desc.Format);
+        auto arr = util::CopyBytesFromTexture(m_lastTexture);
+        m_textureMutex.unlock();
+        // Copy the bits
+        auto file = co_await winrt::StorageFile::GetFileFromPathAsync(winrt::hstring(TEXT("D:\\a.png")));
+        if (file != nullptr)
+        {
+            auto stream = co_await file.OpenAsync(winrt::FileAccessMode::ReadWrite);
+            auto encoder = co_await winrt::BitmapEncoder::CreateAsync(winrt::BitmapEncoder::PngEncoderId(), stream);
+            encoder.SetPixelData(
+                winrt::BitmapPixelFormat::Bgra8,
+                winrt::BitmapAlphaMode::Premultiplied,
+                desc.Width,
+                desc.Height,
+                1.0,
+                1.0,
+                winrt::array_view<uint8_t>(arr.data(), arr.size()));
+            co_await encoder.FlushAsync();
+        }
+    }
 }
 
 void SimpleCapture::Close()
