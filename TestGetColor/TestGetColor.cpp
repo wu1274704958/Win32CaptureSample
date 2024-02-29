@@ -26,7 +26,7 @@ unsigned int GetWindowColor(winrt::IDirect3DDevice const& device,HWND hwnd, int 
 
 int main()
 {
-	auto hwnd = FindWindow(nullptr, TEXT("Simulator"));
+	auto hwnd = FindWindow(nullptr, TEXT("Age of Empires IV -dev"));
 	if (hwnd == nullptr)
 	{
 		MessageBox(nullptr, TEXT("Not Find hwnd"), TEXT("WARN"), 0);
@@ -44,7 +44,7 @@ int main()
 		while (isRun)
 		{
 			auto start = GetTickCount();
-			auto color = GetWindowColor(device,hwnd,190, 200);
+			auto color = GetWindowColor(device,hwnd,3, 33);
 			auto b = (color >> 24) & 255;
 			auto g = (color >> 16) & 255;
 			auto r = (color >> 8) & 255;
@@ -104,7 +104,7 @@ unsigned int GetWindowColor(winrt::IDirect3DDevice const& device,HWND hwnd, int 
 	unsigned int res = 0;
 	auto source = reinterpret_cast<byte*>(mapped.pData);
 
-	auto target = (y * bytesStride) + (x * bytesPerPixel);
+	auto target = (y * mapped.RowPitch) + (x * bytesPerPixel);
 	res |= (source[target] << 24);
 	res |= (source[target + 1] << 16);
 	res |= (source[target + 2] << 8);

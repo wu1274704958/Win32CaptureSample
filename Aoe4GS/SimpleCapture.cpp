@@ -69,7 +69,7 @@ unsigned int SimpleCapture::GetColorFromBackBuffer(int x, int y, uint32_t subres
         unsigned int res = 0;
         auto source = reinterpret_cast<byte*>(mapped.pData);
         
-        auto target = (y * bytesStride) + (x * bytesPerPixel);
+        auto target = (y * mapped.RowPitch) + (x * bytesPerPixel);
         res |= (source[target] << 24);
         res |= (source[target + 1] << 16);
         res |= (source[target + 2] << 8);
